@@ -10,7 +10,7 @@ using System.Windows.Controls;
 
 namespace GreenThumb.Models
 {
-    internal class PlantsDbContext : DbContext
+    public class PlantsDbContext : DbContext
     {
         public DbSet<Plant> Plants { get; set; }
         public DbSet<Advice> Advice { get; set; }

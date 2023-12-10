@@ -57,6 +57,27 @@
             FontSize="20"
             Background="Violet" Click="btnSave_Click"
             />
+        <Button 
+            Content="Add Advice"
+            Click="btnAddAdvice_Click" 
+            Margin="5"
+            Grid.Row ="3"
+            Grid.Column="2"
+            Height="50"
+            Width="100"
+            FontSize="15"
+            Background="Violet"
+            />
+        <ListView x:Name="lvAddedPlants" HorizontalAlignment="Left" Height="173" VerticalAlignment="Center" Width="257" Grid.Column="3" Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Plant Name" DisplayMemberBinding="{Binding PlantName}" />
+                    <GridViewColumn Header="Advice" DisplayMemberBinding="{Binding Advice}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
 
 
 

@@ -1,7 +1,10 @@
 ﻿using GreenThumb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.Identity.Client;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,10 +23,15 @@ namespace GreenThumb
     {
 
         private PlantsDbContext _dbContext;
-        
+        private List<Plant> _allPlants;
+        private List<Plant> _filteredPlants;
+        private readonly Repository _repository;
+
         public MainWindow()
         {
+            
             InitializeComponent();
+            //_repository = repository;
             _dbContext = new PlantsDbContext();
             _dbContext.Database.Migrate();
             LoadPlant();
@@ -33,51 +41,107 @@ namespace GreenThumb
 
         private void Addbtn_Click(object sender, RoutedEventArgs e)
         {
-            var addPlantWindow = new AddPlantWindow();
+
+            //Öppna AddPlantWindow!!
+            //var addPlantWindow = new AddPlantWindow(_repository);
+            //addPlantWindow.ShowDialog();
+
+            //LoadPlant();
+
+            var repository = new Repository(new PlantsDbContext());
+            var addPlantWindow = new AddPlantWindow(repository);
             addPlantWindow.ShowDialog();
 
             LoadPlant();
-            
+
         }
 
        
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            CollectionViewSource.GetDefaultView(Lw1.ItemsSource).Refresh();
+            _filteredPlants = _allPlants.Where(p => p.Name.Contains(txtSearch.Text)).ToList();
+
+            Lw1.Items.Clear();
+
+            foreach(var plant in _filteredPlants)
+            {
+                ListViewItem item = new()
+                {
+                    Content = plant.Name,
+                    Tag = plant
+                };
+
+                Lw1.Items.Add(item);
+            }
         }
 
         private void Removebtn_Click(object sender, RoutedEventArgs e)
         {
-            var selectedPlant = Lw1.SelectedItem as Plant;
-            if (selectedPlant !=null)
+ 
+
+            ListViewItem selectedItem = (ListViewItem)Lw1.SelectedItem;
+            if (selectedItem !=null)
             {
-               
+                Lw1.Items.Remove(selectedItem);
 
-                _dbContext.Plants.Remove(selectedPlant);
-                _dbContext.SaveChanges();
+                using (PlantsDbContext context = new())
+                {
 
-                LoadPlant();
+                }
             }
+            else
+            {
+                MessageBox.Show("You need to choose atleast one plant");
+            }
+
         }
 
         private void Dtbtn_Click(object sender, RoutedEventArgs e)
         {
-            
-            var selectedPlant = Lw1.SelectedItem as Plant;
-            
 
-            if (selectedPlant !=null)
+            var item = Lw1.SelectedItem as ListViewItem;
+            var selectedPlant = (Plant)item.Tag;
+
+            //var selectedPlant = Lw1.SelectedItem as Plant;
+            if (selectedPlant != null)
             {
                 var plantDetailsWindow = new PlantDetailsWindow(selectedPlant);
                 plantDetailsWindow.ShowDialog();
             }
+
+            if (selectedPlant != null)
+            {
+                var plantDetailsWindow = new PlantDetailsWindow(selectedPlant);
+                plantDetailsWindow.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("You need to choose atleast one plant");
+            }
+
+
+            //var item = Lw1.SelectedItem as ListViewItem;
+            //var selectedPlant = (Plant)item.Tag;
+
+            //if (selectedPlant != null)
+            //{
+            //    var plantDetailsWindow = new PlantDetailsWindow(selectedPlant);
+            //    plantDetailsWindow.UpdatePlantList(); // Uppdatera råd i PlantDetailsWindow
+            //    plantDetailsWindow.ShowDialog();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("You need to choose at least one plant");
+            //}
+
+
         }
 
         private bool PlantFilter(object item)
         {
             if (string.IsNullOrWhiteSpace(txtSearch.Text))
-                return true;
+                return true; 
 
             var plant = item as Plant;
             return plant != null && plant.Name.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase);
@@ -85,16 +149,44 @@ namespace GreenThumb
 
 
 
-        private void LoadPlant()
+        public void LoadPlant()
         {
-            //För att visa namnet på växterna i Listview!! 
-            var plants = _dbContext.Plants.Select(p => new ViewModel { Id = p.Plantid, PlantName = p.Name}).ToList();
-            Lw1.ItemsSource = plants;
+            var plants = _dbContext.Plants.ToList();
+            _allPlants = plants;
+            _filteredPlants = plants;
+            _allPlants = _dbContext.Plants.Include(p => p.Advices).ToList();
 
-            CollectionViewSource.GetDefaultView(Lw1.ItemsSource).Filter = PlantFilter;
+            
 
 
+            foreach (var plant in plants)
+            {
+                ListViewItem item = new()
+                {
+                    Content = plant.Name,
+                    Tag = plant
+                };
+
+                Lw1.Items.Add(item);
+            }
+           
+
+            CollectionViewSource.GetDefaultView(Lw1.Items).Filter = PlantFilter;
+
+            
         }
+
+        public void UpdatePlantList()
+        {
+            Lw1.Items.Clear();
+            LoadPlant();
+        }
+
+
+
+
+
+
     }
 
 

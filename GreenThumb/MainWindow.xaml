@@ -29,10 +29,10 @@
             Grid.ColumnSpan="2"
             Height="50"
             Width="100" Click="Addbtn_Click"/>
-        <ListView Grid.Column="1" Grid.Row="1"  Grid.ColumnSpan="3" Grid.RowSpan="3" Name="Lw1" Margin="133,0,0,0" DisplayMemberPath="PlantName">
+        <ListView Grid.Column="1" Grid.Row="1"  Grid.ColumnSpan="3" Grid.RowSpan="3" Name="Lw1" Margin="133,0,0,0" DisplayMemberPath="PlantName" >
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Plant Name" DisplayMemberBinding="{Binding PlantName}"/>
+                    <GridViewColumn Header="Plant Name" />
                 </GridView>
             </ListView.View>
         </ListView>
