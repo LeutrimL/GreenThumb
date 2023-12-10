@@ -28,7 +28,6 @@ namespace GreenThumb
 
             listViewDetails.ItemsSource = plantDetails;
 
-
         }
 
         private void Homebtn_Click(object sender, RoutedEventArgs e)
@@ -38,22 +37,5 @@ namespace GreenThumb
 
             Close();
         }
-
-        //public void UpdateAdviceList()
-        //{
-        //    // Anta att du har en ListBox med namnet lstAdvice i XAML-koden.
-        //    listViewDetails.Items.Clear(); // Rensa befintlig data
-
-        //    // Hämta råden för den valda växten
-        //    var selectedPlant = // Hämta den valda växten från någonstans (till exempel ett Property i PlantDetailsWindow)
-        //    var advices = _repository.GetAdvicesForPlant(selectedPlant);
-
-        //    // Uppdatera listbox med råden
-        //    foreach (var advice in advices)
-        //    {
-        //        listViewDetails.Items.Add(advice.Description);
-        //    }
-        //}
-
     }
 }

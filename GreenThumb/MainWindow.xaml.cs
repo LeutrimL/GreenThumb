@@ -31,7 +31,7 @@ namespace GreenThumb
         {
             
             InitializeComponent();
-            //_repository = repository;
+            _repository = new Repository(new PlantsDbContext()); 
             _dbContext = new PlantsDbContext();
             _dbContext.Database.Migrate();
             LoadPlant();
@@ -42,12 +42,6 @@ namespace GreenThumb
         private void Addbtn_Click(object sender, RoutedEventArgs e)
         {
 
-            //Öppna AddPlantWindow!!
-            //var addPlantWindow = new AddPlantWindow(_repository);
-            //addPlantWindow.ShowDialog();
-
-            //LoadPlant();
-
             var repository = new Repository(new PlantsDbContext());
             var addPlantWindow = new AddPlantWindow(repository);
             addPlantWindow.ShowDialog();
@@ -55,8 +49,6 @@ namespace GreenThumb
             LoadPlant();
 
         }
-
-       
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -78,23 +70,38 @@ namespace GreenThumb
 
         private void Removebtn_Click(object sender, RoutedEventArgs e)
         {
- 
+            //ListViewItem selectedItem = (ListViewItem)Lw1.SelectedItem;
+            //if (selectedItem !=null)
+            //{
+            //    Lw1.Items.Remove(selectedItem);
+
+            //    using (PlantsDbContext context = new())
+            //    {
+
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("You need to choose atleast one plant");
+            //}
 
             ListViewItem selectedItem = (ListViewItem)Lw1.SelectedItem;
-            if (selectedItem !=null)
+            if (selectedItem != null)
             {
-                Lw1.Items.Remove(selectedItem);
-
-                using (PlantsDbContext context = new())
+                var selectedPlant = selectedItem.Tag as Plant;
+                if (selectedPlant != null)
                 {
+                   
+                    Lw1.Items.Remove(selectedItem);
 
+                    
+                    _repository.RemovePlant(selectedPlant);
                 }
             }
             else
             {
-                MessageBox.Show("You need to choose atleast one plant");
+                MessageBox.Show("You need to choose at least one plant");
             }
-
         }
 
         private void Dtbtn_Click(object sender, RoutedEventArgs e)
@@ -103,7 +110,6 @@ namespace GreenThumb
             var item = Lw1.SelectedItem as ListViewItem;
             var selectedPlant = (Plant)item.Tag;
 
-            //var selectedPlant = Lw1.SelectedItem as Plant;
             if (selectedPlant != null)
             {
                 var plantDetailsWindow = new PlantDetailsWindow(selectedPlant);
@@ -119,23 +125,6 @@ namespace GreenThumb
             {
                 MessageBox.Show("You need to choose atleast one plant");
             }
-
-
-            //var item = Lw1.SelectedItem as ListViewItem;
-            //var selectedPlant = (Plant)item.Tag;
-
-            //if (selectedPlant != null)
-            //{
-            //    var plantDetailsWindow = new PlantDetailsWindow(selectedPlant);
-            //    plantDetailsWindow.UpdatePlantList(); // Uppdatera råd i PlantDetailsWindow
-            //    plantDetailsWindow.ShowDialog();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("You need to choose at least one plant");
-            //}
-
-
         }
 
         private bool PlantFilter(object item)
@@ -156,9 +145,7 @@ namespace GreenThumb
             _filteredPlants = plants;
             _allPlants = _dbContext.Plants.Include(p => p.Advices).ToList();
 
-            
-
-
+      
             foreach (var plant in plants)
             {
                 ListViewItem item = new()
@@ -170,10 +157,8 @@ namespace GreenThumb
                 Lw1.Items.Add(item);
             }
            
-
             CollectionViewSource.GetDefaultView(Lw1.Items).Filter = PlantFilter;
 
-            
         }
 
         public void UpdatePlantList()
@@ -181,15 +166,6 @@ namespace GreenThumb
             Lw1.Items.Clear();
             LoadPlant();
         }
-
-
-
-
-
-
     }
-
-
-    
 }
 

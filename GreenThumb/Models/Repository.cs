@@ -52,10 +52,6 @@ namespace GreenThumb
                .Where(p => p.Name.ToLower().Contains(searchText.ToLower()))
                  .ToList();
        }
-            
-
-        
-
 
     }
 }

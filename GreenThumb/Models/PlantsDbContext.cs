@@ -43,9 +43,6 @@ namespace GreenThumb.Models
                 .WithOne(a => a.Plant)
                 .HasForeignKey(a => a.PlantId);
 
-            
-
-            
 
             base.OnModelCreating(modelBuilder);
 
@@ -87,21 +84,7 @@ namespace GreenThumb.Models
 
                 );
 
-
-
-
-
-
-
         }
-
-
-
-        
-
-
-
-
     }
 }
 

@@ -58,7 +58,7 @@ namespace GreenThumb
                     _repository.AddAdvice(newAdvice);
                 }
 
-                Close();
+           
 
                 var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
                 if (mainWindow != null)
@@ -86,8 +86,6 @@ namespace GreenThumb
 
             lvAddedPlants.ItemsSource = null; 
             lvAddedPlants.ItemsSource = _addedPlants;
-
-
 
         }
     }

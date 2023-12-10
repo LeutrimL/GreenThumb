@@ -10,7 +10,6 @@ namespace GreenThumb.Models
     {
         public int AdviceId { get; set; }
         public string Description { get; set; }
-
         public int PlantId { get; set; }
         public Plant Plant { get; set; }    
     }
