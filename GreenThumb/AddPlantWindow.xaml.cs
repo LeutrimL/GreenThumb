@@ -41,32 +41,36 @@ namespace GreenThumb
         {
 
                 string plantName = txtPlantName.Text;
-                string plantAdvice = txtPlantAdvice.Text;
 
-                if (string.IsNullOrEmpty(plantName) || string.IsNullOrEmpty(plantAdvice))
+                if (string.IsNullOrEmpty(plantName))
                 {
-                    MessageBox.Show("You need to fill in everything before Saving");
+                    MessageBox.Show("You need to fill in the plant name before saving.");
                     return;
                 }
 
                 var newPlant = new Plant { Name = plantName };
+
+               
                 _repository.AddPlant(newPlant);
 
-                if (!string.IsNullOrEmpty(plantAdvice))
+               
+                foreach (var adviceText in _addedPlants.Select(vm => vm.Advice))
                 {
-                    var newAdvice = new Advice { Description = plantAdvice, PlantId = newPlant.Plantid };
+                    var newAdvice = new Advice { Description = adviceText, PlantId = newPlant.Plantid };
+
+                    
                     _repository.AddAdvice(newAdvice);
                 }
 
-           
-
+                
                 var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
                 if (mainWindow != null)
                 {
                     mainWindow.LoadPlant();
                 }
 
-            Close();
+                Close();
+            
         }
 
         private void btnAddAdvice_Click(object sender, RoutedEventArgs e)

@@ -29,13 +29,11 @@ namespace GreenThumb
 
         public MainWindow()
         {
-            
             InitializeComponent();
             _repository = new Repository(new PlantsDbContext()); 
             _dbContext = new PlantsDbContext();
             _dbContext.Database.Migrate();
             LoadPlant();
-
         }
 
 
@@ -70,20 +68,6 @@ namespace GreenThumb
 
         private void Removebtn_Click(object sender, RoutedEventArgs e)
         {
-            //ListViewItem selectedItem = (ListViewItem)Lw1.SelectedItem;
-            //if (selectedItem !=null)
-            //{
-            //    Lw1.Items.Remove(selectedItem);
-
-            //    using (PlantsDbContext context = new())
-            //    {
-
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show("You need to choose atleast one plant");
-            //}
 
             ListViewItem selectedItem = (ListViewItem)Lw1.SelectedItem;
             if (selectedItem != null)
